@@ -1,0 +1,86 @@
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: http://ilan:ilan@localhost:8761/eureka/
+    instance:
+        instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+        lease-renewal-interval-in-seconds: 10
+
+######################## Hystrix Configuration ########################
+feign:
+    hystrix:
+        enabled: true
+hystrix:
+    command:
+        HystrixCommandKey:
+            circuitBreaker:
+                errorThresholdPercentage: 3000
+                requestVolumeThreshold: 8
+                sleepWindowInMilliseconds: 50
+            execution:
+                isolation:
+                    thread:
+                        timeoutInMilliseconds: 3000
+
+######################## Logging Configuration  for Query########################
+logging:
+    level:
+        org:
+            hibernate:
+                SQL: DEBUG
+                type: TRACE
+                type.descriptor.sql: trace
+
+management:
+    endpoint:
+        info:
+            enabled: true
+        metrics:
+            enabled: true
+        shutdown:
+            enabled: true
+    endpoints:
+        health:
+            show-details: ALWAYS
+        jmx:
+            exposure:
+                include: '*'
+        web:
+            exposure:
+                include: '*'
+
+spring:
+    boot:
+        admin:
+            url: http://localhost:8077
+            username: admin
+            password: admin
+            auto-deregistration: false
+            auto-registration: true
+            client:
+                enabled: true
+            register-once: false
+    datasource:
+        driverClassName: org.h2.Driver
+        password: ''
+        url: jdbc:h2:mem:AccusedDB
+        username: sa
+    h2:
+        console:
+            enabled: true
+            path: /h2
+            settings:
+                trace: false
+                web-allow-others: false
+    jpa:
+        database-platform: org.hibernate.dialect.H2Dialect
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                format_sql: true
+                show_sql: true
+
+
+test:
+    property: testData
